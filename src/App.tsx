@@ -1,4 +1,5 @@
-import { Switch, Route, Router as WouterRouter } from "wouter";
+import { useEffect } from "react";
+import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
 import { useHashLocation } from "wouter/use-hash-location";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Sidebar } from "@/components/layout/Sidebar";
@@ -28,13 +29,22 @@ import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
 
+function ScrollToTop() {
+  const [location] = useLocation();
+  useEffect(() => {
+    document.getElementById("main-content")?.scrollTo(0, 0);
+  }, [location]);
+  return null;
+}
+
 function AppContent() {
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex h-screen overflow-hidden bg-background">
       <Sidebar />
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col overflow-hidden">
         <Header />
-        <main className="flex-1 p-6 overflow-y-auto">
+        <main id="main-content" className="flex-1 p-6 overflow-y-auto">
+          <ScrollToTop />
           <Switch>
             <Route path="/" component={Home} />
             <Route path="/o-que-e-kiro" component={OQueEKiro} />

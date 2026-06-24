@@ -2,65 +2,90 @@ export default function Chat() {
   return (
     <div className="max-w-4xl mx-auto">
       <h1>Chat Interativo</h1>
-      <p className="text-lg text-muted-foreground mb-6">O chat é a interface principal do Kiro — onde você conversa, planeja e executa.</p>
+      <p className="text-lg text-muted-foreground mb-6">O chat e a interface principal do Kiro. Entenda como ele funciona, suas capacidades e como tirar o maximo proveito.</p>
 
-      <h2>Fluxo de Trabalho</h2>
-      <p>O chat do Kiro não é apenas Q&A. Ele é um agente que:</p>
+      <h2>O que acontece quando voce envia uma mensagem</h2>
+      <p>Cada mensagem sua inicia um ciclo que pode envolver multiplas acoes:</p>
       <ol className="list-decimal list-inside space-y-2 my-4 ml-4">
-        <li>Lê e analisa arquivos do projeto automaticamente</li>
-        <li>Executa comandos no terminal</li>
-        <li>Cria e edita arquivos</li>
-        <li>Roda builds e testes para verificar</li>
-        <li>Mantém contexto da conversa</li>
+        <li><strong>Analise da intencao</strong> — o modelo interpreta o que voce quer (pergunta? mudanca? investigacao?)</li>
+        <li><strong>Planejamento</strong> — decide quais ferramentas usar e em que ordem</li>
+        <li><strong>Execucao</strong> — le arquivos, executa comandos, edita codigo</li>
+        <li><strong>Verificacao</strong> — roda build/testes para confirmar que funciona</li>
+        <li><strong>Resposta</strong> — apresenta o resultado com explicacao</li>
       </ol>
+      <p className="mt-3">Este ciclo pode se repetir varias vezes em uma unica mensagem. Por exemplo, se o build falhar no passo 4, o Kiro volta ao passo 3 para corrigir.</p>
 
-      <h2>Comandos Slash</h2>
-      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">
-{`/help              — Lista todos os comandos
-/chat save [nome]  — Salvar sessão com nome
-/chat load [nome]  — Carregar sessão salva
-/context add       — Adicionar arquivo ao contexto
-/context show      — Ver contexto atual
-/model [nome]      — Trocar modelo
-/clear             — Limpar histórico
-/copy              — Copiar última resposta
-/compact           — Compactar contexto (liberar memória)`}
-      </pre>
-
-      <h2>Sessões e Persistência</h2>
-      <p>O Kiro mantém sessões que podem ser salvas e retomadas:</p>
-      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">
-{`# Salvar sessão atual
-/chat save minha-feature
-
-# Listar sessões salvas
-/chat list
-
-# Carregar sessão
-/chat load minha-feature
-
-# Retomar última sessão automaticamente
-kiro-cli chat --resume`}
-      </pre>
-
-      <h2>Compactação de Contexto</h2>
-      <p>Quando a janela de contexto está cheia, o Kiro compacta automaticamente — resumindo mensagens antigas para liberar espaço sem perder informação importante.</p>
-      <div className="p-4 border-l-4 border-primary bg-primary/5 rounded-r-lg my-4">
-        <p className="text-sm">💡 Após compactação, o Kiro re-verifica seu estado atual (arquivos, builds) antes de continuar. Não precisa repetir informações.</p>
+      <h2>Tipos de interacao</h2>
+      <div className="space-y-3 my-4">
+        <div className="p-4 border border-border rounded-lg">
+          <h3 className="text-base font-semibold mt-0 border-0 pb-0">Perguntas (nao modifica nada)</h3>
+          <p className="text-sm text-muted-foreground mt-1">"O que esta funcao faz?" "Por que este teste falha?" "Qual a arquitetura deste modulo?" — O Kiro le o codigo, analisa e responde sem alterar nada.</p>
+        </div>
+        <div className="p-4 border border-border rounded-lg">
+          <h3 className="text-base font-semibold mt-0 border-0 pb-0">Tarefas simples (uma acao)</h3>
+          <p className="text-sm text-muted-foreground mt-1">"Renomeie getUserName para getUsername" "Adicione tratamento de erro aqui" — Executa a mudanca, verifica e reporta.</p>
+        </div>
+        <div className="p-4 border border-border rounded-lg">
+          <h3 className="text-base font-semibold mt-0 border-0 pb-0">Tarefas complexas (multi-step)</h3>
+          <p className="text-sm text-muted-foreground mt-1">"Implemente paginacao na API /users" — Cria task list, executa passo a passo, verifica entre cada um.</p>
+        </div>
+        <div className="p-4 border border-border rounded-lg">
+          <h3 className="text-base font-semibold mt-0 border-0 pb-0">Investigacao (debugging)</h3>
+          <p className="text-sm text-muted-foreground mt-1">"Por que da erro 500 quando faço POST /orders?" — Le logs, roda com debug, identifica causa raiz, sugere ou aplica fix.</p>
+        </div>
       </div>
 
-      <h2>Task Lists</h2>
-      <p>O Kiro cria e gerencia listas de tarefas automaticamente para trabalhos multi-step:</p>
-      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">
-{`> implemente autenticação JWT no projeto
+      <h2>Sessoes: salvar e retomar</h2>
+      <p>O Kiro pode salvar o estado inteiro da conversa para retomar depois:</p>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`# Salvar a sessao atual com um nome descritivo
+/chat save implementando-auth
+
+# Listar todas as sessoes salvas
+/chat list
+
+# Carregar uma sessao anterior (continua de onde parou)
+/chat load implementando-auth
+
+# Retomar a ultima sessao automaticamente
+kiro-cli chat --resume`}</pre>
+      <p className="mt-3"><strong>Quando salvar:</strong> Antes de pausar um trabalho longo, antes de trocar de contexto para outra tarefa, ou quando atingir um ponto estavel que quer preservar.</p>
+
+      <h2>Compactacao de contexto</h2>
+      <p>O modelo tem um limite de contexto (200K tokens). Quando a conversa enche:</p>
+      <ol className="list-decimal list-inside space-y-2 my-4 ml-4">
+        <li>O Kiro detecta que esta proximo do limite</li>
+        <li>Compacta automaticamente — resume mensagens antigas preservando informacoes-chave</li>
+        <li>Re-verifica o estado atual (le arquivos recentes, checa git status)</li>
+        <li>Continua de onde parou sem perda funcional</li>
+      </ol>
+      <div className="p-4 border-l-4 border-primary bg-primary/5 rounded-r-lg my-4">
+        <p className="text-sm"><strong>Dica:</strong> Se voce perceber que o Kiro esqueceu algo apos compactacao, basta relembrar: "o arquivo X precisa ter Y". Ele re-incorpora a informacao.</p>
+      </div>
+
+      <h2>Task Lists automaticas</h2>
+      <p>Para tarefas que levam mais de 2-3 passos, o Kiro cria uma lista antes de comecar:</p>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`> adicione sistema de notificacoes push
 
 # Kiro cria automaticamente:
-# [ ] #1. Instalar dependências (jsonwebtoken, bcrypt)
-# [ ] #2. Criar middleware de auth
-# [ ] #3. Implementar rota de login
-# [ ] #4. Proteger rotas existentes
-# [ ] #5. Escrever testes`}
-      </pre>
+# [ ] 1. Instalar firebase-admin
+# [ ] 2. Criar servico de notificacao
+# [ ] 3. Endpoint POST /notifications/send
+# [ ] 4. Endpoint GET /notifications (historico)
+# [ ] 5. Webhook para eventos importantes
+# [ ] 6. Testes de integracao
+
+# Depois executa um por um, marcando conforme conclui:
+# [x] 1. Instalar firebase-admin
+# [x] 2. Criar servico de notificacao
+# [ ] 3. Endpoint POST /notifications/send  <-- em andamento`}</pre>
+
+      <h2>Dicas para mensagens efetivas</h2>
+      <ul className="list-disc list-inside space-y-2 my-4 ml-4">
+        <li><strong>Seja especifico:</strong> "adicione validacao de email no registro" e melhor que "melhore o registro"</li>
+        <li><strong>Dê contexto:</strong> "no arquivo src/auth.ts, a funcao login..." ajuda o Kiro a ir direto ao ponto</li>
+        <li><strong>Declare restricoes:</strong> "use Zod para validacao, nao Joi" evita retrabalho</li>
+        <li><strong>Quebre tarefas grandes:</strong> Em vez de "refaça o sistema inteiro", va por modulos</li>
+      </ul>
     </div>
   );
 }

@@ -30,7 +30,13 @@ export default function Chat() {
             <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/reply</td><td className="p-3">Abrir editor com ultima resposta para compor reply</td><td className="p-3 font-mono text-xs">/reply</td></tr>
             <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/tools</td><td className="p-3">Ver ferramentas e gerenciar trust</td><td className="p-3 font-mono text-xs">/tools [trust-all|trust|untrust|reset]</td></tr>
             <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/usage</td><td className="p-3">Ver informacoes de billing e uso</td><td className="p-3 font-mono text-xs">/usage</td></tr>
-          </tbody>
+                      <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/effort</td><td className="p-3">Definir nivel de thinking para a sessao</td><td className="p-3 font-mono text-xs">/effort [low|medium|high]</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/changelog</td><td className="p-3">Mostrar release notes recentes</td><td className="p-3 font-mono text-xs">/changelog</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/rewind</td><td className="p-3">Rebobinar para turno anterior (fork nova sessao)</td><td className="p-3 font-mono text-xs">/rewind</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/session-id</td><td className="p-3">Imprimir ID da sessao atual</td><td className="p-3 font-mono text-xs">/session-id</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/settings</td><td className="p-3">Configurar tema, terminal, keybindings</td><td className="p-3 font-mono text-xs">/settings</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/tui</td><td className="p-3">Novidades da interface TUI</td><td className="p-3 font-mono text-xs">/tui</td></tr>
+</tbody>
         </table>
       </div>
 
@@ -92,6 +98,20 @@ then asks approval before switching to execution.`}</pre>
 
       <h2>/usage — Billing</h2>
       <p>Mostra consumo de creditos e limites da conta.</p>
+
+      
+      <h2>/effort — Controle de pensamento</h2>
+      <p>Define quanto o modelo pensa antes de responder. Afeta precisao, velocidade e custo.</p>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`/effort          # Mostra nivel atual ou abre seletor
+/effort low      # Pensamento minimo (rapido, barato)
+/effort medium   # Equilibrio (padrao)
+/effort high     # Pensamento maximo (lento, preciso, caro)`}</pre>
+      <div className="p-4 border-l-4 border-primary bg-primary/5 rounded-r-lg my-4">
+        <p className="text-sm"><strong>Impacto real:</strong> Com effort high, o modelo gasta mais tokens raciocinando internamente antes de gerar a resposta. Ideal para debugging complexo ou decisoes de arquitetura. Com effort low, respostas vem rapido mas podem ser menos elaboradas. Persiste apenas na sessao atual.</p>
+      </div>
+
+      <h2>/rewind — Voltar no tempo</h2>
+      <p>Rebobina a conversa para um turno anterior, criando fork (nova sessao a partir daquele ponto). A sessao original fica intacta.</p>
 
       <h2>Settings que mudam comportamento do chat</h2>
       <div className="overflow-x-auto my-4">

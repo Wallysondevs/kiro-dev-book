@@ -15,7 +15,7 @@ const NAVIGATION = [
       { path: "/", label: "Início", icon: BookOpen },
       { path: "/o-que-e-kiro", label: "O que é o Kiro", icon: BrainCircuit },
       { path: "/instalacao", label: "Instalação", icon: Rocket },
-      { path: "/primeiro-uso", label: "Primeiro Uso", icon: Zap },
+      { path: "/primeiro-uso", label: "Todos os Comandos", icon: Zap },
     ]
   },
   {

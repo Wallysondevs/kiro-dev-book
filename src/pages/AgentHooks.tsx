@@ -92,7 +92,7 @@ echo "[$(date)] ERROR in $FILE: $ERROR" >> .kiro/error.log`}</pre>
       </ol>
 
       <div className="p-4 border-l-4 border-primary bg-primary/5 rounded-r-lg my-4">
-        <p className="text-sm"><strong>Importante:</strong> Hooks rodam no mesmo ambiente do seu terminal. Eles têm acesso a todas as ferramentas instaladas no sistema. Mantenha-os rápidos (< 5 segundos) para não travar o fluxo do agente.</p>
+        <p className="text-sm"><strong>Importante:</strong> Hooks rodam no mesmo ambiente do seu terminal. Eles têm acesso a todas as ferramentas instaladas no sistema. Mantenha-os rápidos (&lt; 5 segundos) para não travar o fluxo do agente.</p>
       </div>
     </div>
   );

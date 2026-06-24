@@ -1,91 +1,139 @@
 export default function Chat() {
   return (
     <div className="max-w-4xl mx-auto">
-      <h1>Chat Interativo</h1>
-      <p className="text-lg text-muted-foreground mb-6">O chat e a interface principal do Kiro. Entenda como ele funciona, suas capacidades e como tirar o maximo proveito.</p>
+      <h1>Chat e Slash Commands</h1>
+      <p className="text-lg text-muted-foreground mb-6">Referencia completa de todos os slash commands disponiveis no chat, com descricao e uso.</p>
 
-      <h2>O que acontece quando voce envia uma mensagem</h2>
-      <p>Cada mensagem sua inicia um ciclo que pode envolver multiplas acoes:</p>
-      <ol className="list-decimal list-inside space-y-2 my-4 ml-4">
-        <li><strong>Analise da intencao</strong> — o modelo interpreta o que voce quer (pergunta? mudanca? investigacao?)</li>
-        <li><strong>Planejamento</strong> — decide quais ferramentas usar e em que ordem</li>
-        <li><strong>Execucao</strong> — le arquivos, executa comandos, edita codigo</li>
-        <li><strong>Verificacao</strong> — roda build/testes para confirmar que funciona</li>
-        <li><strong>Resposta</strong> — apresenta o resultado com explicacao</li>
-      </ol>
-      <p className="mt-3">Este ciclo pode se repetir varias vezes em uma unica mensagem. Por exemplo, se o build falhar no passo 4, o Kiro volta ao passo 3 para corrigir.</p>
-
-      <h2>Tipos de interacao</h2>
-      <div className="space-y-3 my-4">
-        <div className="p-4 border border-border rounded-lg">
-          <h3 className="text-base font-semibold mt-0 border-0 pb-0">Perguntas (nao modifica nada)</h3>
-          <p className="text-sm text-muted-foreground mt-1">"O que esta funcao faz?" "Por que este teste falha?" "Qual a arquitetura deste modulo?" — O Kiro le o codigo, analisa e responde sem alterar nada.</p>
-        </div>
-        <div className="p-4 border border-border rounded-lg">
-          <h3 className="text-base font-semibold mt-0 border-0 pb-0">Tarefas simples (uma acao)</h3>
-          <p className="text-sm text-muted-foreground mt-1">"Renomeie getUserName para getUsername" "Adicione tratamento de erro aqui" — Executa a mudanca, verifica e reporta.</p>
-        </div>
-        <div className="p-4 border border-border rounded-lg">
-          <h3 className="text-base font-semibold mt-0 border-0 pb-0">Tarefas complexas (multi-step)</h3>
-          <p className="text-sm text-muted-foreground mt-1">"Implemente paginacao na API /users" — Cria task list, executa passo a passo, verifica entre cada um.</p>
-        </div>
-        <div className="p-4 border border-border rounded-lg">
-          <h3 className="text-base font-semibold mt-0 border-0 pb-0">Investigacao (debugging)</h3>
-          <p className="text-sm text-muted-foreground mt-1">"Por que da erro 500 quando faço POST /orders?" — Le logs, roda com debug, identifica causa raiz, sugere ou aplica fix.</p>
-        </div>
+      <h2>Todos os Slash Commands</h2>
+      <p>Saida real de <code className="bg-muted px-1 rounded">/help</code>:</p>
+      <div className="overflow-x-auto my-4">
+        <table className="w-full text-sm border border-border rounded-lg">
+          <thead className="bg-muted"><tr><th className="p-3 text-left">Comando</th><th className="p-3 text-left">Descricao</th><th className="p-3 text-left">Uso</th></tr></thead>
+          <tbody>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/agent</td><td className="p-3">Selecionar ou listar agentes</td><td className="p-3 font-mono text-xs">/agent [name|create|edit|swap]</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/chat</td><td className="p-3">Carregar sessao ou iniciar nova</td><td className="p-3 font-mono text-xs">/chat [save|load|new [prompt]]</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/clear</td><td className="p-3">Limpar historico da conversa</td><td className="p-3 font-mono text-xs">/clear</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/code</td><td className="p-3">Code intelligence (LSP)</td><td className="p-3 font-mono text-xs">/code [init|status|logs|overview|summary]</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/compact</td><td className="p-3">Compactar historico para liberar contexto</td><td className="p-3 font-mono text-xs">/compact</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/context</td><td className="p-3">Gerenciar arquivos de contexto ou ver uso de tokens</td><td className="p-3 font-mono text-xs">/context [add|remove|clear]</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/feedback</td><td className="p-3">Enviar feedback ou reportar problemas</td><td className="p-3 font-mono text-xs">/feedback</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/guide</td><td className="p-3">Ajuda sobre features do Kiro via agente guia</td><td className="p-3 font-mono text-xs">/guide [pergunta]</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/help</td><td className="p-3">Mostrar comandos disponiveis</td><td className="p-3 font-mono text-xs">/help</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/hooks</td><td className="p-3">Ver hooks configurados</td><td className="p-3 font-mono text-xs">/hooks</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/knowledge</td><td className="p-3">Gerenciar knowledge base</td><td className="p-3 font-mono text-xs">/knowledge [show|add|remove|update|clear|cancel]</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/mcp</td><td className="p-3">Ver MCP servers configurados</td><td className="p-3 font-mono text-xs">/mcp</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/model</td><td className="p-3">Trocar ou listar modelos</td><td className="p-3 font-mono text-xs">/model [model-name]</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/paste</td><td className="p-3">Colar imagem do clipboard</td><td className="p-3 font-mono text-xs">/paste</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/plan</td><td className="p-3">Mudar para agente de planejamento</td><td className="p-3 font-mono text-xs">/plan [prompt]</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/prompts</td><td className="p-3">Selecionar ou listar prompts salvos</td><td className="p-3 font-mono text-xs">/prompts [nome]</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/quit</td><td className="p-3">Sair do aplicativo</td><td className="p-3 font-mono text-xs">/quit</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/reply</td><td className="p-3">Abrir editor com ultima resposta para compor reply</td><td className="p-3 font-mono text-xs">/reply</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/tools</td><td className="p-3">Ver ferramentas e gerenciar trust</td><td className="p-3 font-mono text-xs">/tools [trust-all|trust|untrust|reset]</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/usage</td><td className="p-3">Ver informacoes de billing e uso</td><td className="p-3 font-mono text-xs">/usage</td></tr>
+          </tbody>
+        </table>
       </div>
 
-      <h2>Sessoes: salvar e retomar</h2>
-      <p>O Kiro pode salvar o estado inteiro da conversa para retomar depois:</p>
-      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`# Salvar a sessao atual com um nome descritivo
-/chat save implementando-auth
-
-# Listar todas as sessoes salvas
-/chat list
-
-# Carregar uma sessao anterior (continua de onde parou)
-/chat load implementando-auth
-
-# Retomar a ultima sessao automaticamente
-kiro-cli chat --resume`}</pre>
-      <p className="mt-3"><strong>Quando salvar:</strong> Antes de pausar um trabalho longo, antes de trocar de contexto para outra tarefa, ou quando atingir um ponto estavel que quer preservar.</p>
-
-      <h2>Compactacao de contexto</h2>
-      <p>O modelo tem um limite de contexto (200K tokens). Quando a conversa enche:</p>
-      <ol className="list-decimal list-inside space-y-2 my-4 ml-4">
-        <li>O Kiro detecta que esta proximo do limite</li>
-        <li>Compacta automaticamente — resume mensagens antigas preservando informacoes-chave</li>
-        <li>Re-verifica o estado atual (le arquivos recentes, checa git status)</li>
-        <li>Continua de onde parou sem perda funcional</li>
-      </ol>
-      <div className="p-4 border-l-4 border-primary bg-primary/5 rounded-r-lg my-4">
-        <p className="text-sm"><strong>Dica:</strong> Se voce perceber que o Kiro esqueceu algo apos compactacao, basta relembrar: "o arquivo X precisa ter Y". Ele re-incorpora a informacao.</p>
+      <h2>Comandos TUI-only (nao aparecem no /help)</h2>
+      <div className="overflow-x-auto my-4">
+        <table className="w-full text-sm border border-border rounded-lg">
+          <thead className="bg-muted"><tr><th className="p-3 text-left">Comando</th><th className="p-3 text-left">Descricao</th></tr></thead>
+          <tbody>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/copy</td><td className="p-3">Copiar ultima resposta para clipboard</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/editor</td><td className="p-3">Abrir $EDITOR para compor prompt</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/exit</td><td className="p-3">Alias para /quit</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/spawn</td><td className="p-3">Criar nova sessao de sub-agente com tarefa</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/theme</td><td className="p-3">Selecionar tema do terminal</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">/transcript</td><td className="p-3">Abrir transcricao no $PAGER</td></tr>
+          </tbody>
+        </table>
       </div>
 
-      <h2>Task Lists automaticas</h2>
-      <p>Para tarefas que levam mais de 2-3 passos, o Kiro cria uma lista antes de comecar:</p>
-      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`> adicione sistema de notificacoes push
+      <h2>/plan — Agente de Planejamento</h2>
+      <p>Alterna para o agente especializado em planejamento. Atalho: <code className="bg-muted px-1 rounded">Shift+Tab</code></p>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`> /plan
+Switched to the Kiro [plan] agent.
+Transform any idea into fully working code.
+What do you want to build today?
 
-# Kiro cria automaticamente:
-# [ ] 1. Instalar firebase-admin
-# [ ] 2. Criar servico de notificacao
-# [ ] 3. Endpoint POST /notifications/send
-# [ ] 4. Endpoint GET /notifications (historico)
-# [ ] 5. Webhook para eventos importantes
-# [ ] 6. Testes de integracao
+[plan] > I want to add authentication
 
-# Depois executa um por um, marcando conforme conclui:
-# [x] 1. Instalar firebase-admin
-# [x] 2. Criar servico de notificacao
-# [ ] 3. Endpoint POST /notifications/send  <-- em andamento`}</pre>
+[plan] asks structured questions:
+[1]: What auth method?
+  a. Email/Password
+  b. OAuth
+  c. Magic Links
+[2]: What framework?
+  a. React + Node
+  b. Next.js
+  c. Other
 
-      <h2>Dicas para mensagens efetivas</h2>
-      <ul className="list-disc list-inside space-y-2 my-4 ml-4">
-        <li><strong>Seja especifico:</strong> "adicione validacao de email no registro" e melhor que "melhore o registro"</li>
-        <li><strong>Dê contexto:</strong> "no arquivo src/auth.ts, a funcao login..." ajuda o Kiro a ir direto ao ponto</li>
-        <li><strong>Declare restricoes:</strong> "use Zod para validacao, nao Joi" evita retrabalho</li>
-        <li><strong>Quebre tarefas grandes:</strong> Em vez de "refaça o sistema inteiro", va por modulos</li>
-      </ul>
+> 1=a, 2=c, I use Rust with Axum
+
+[plan] researches, creates implementation plan,
+then asks approval before switching to execution.`}</pre>
+      <p className="mt-3">O agente /plan e <strong>read-only</strong>: nao pode modificar arquivos, apenas explorar o codigo e planejar.</p>
+
+      <h2>/code — Code Intelligence</h2>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`/code init        # Inicializa LSP (detecta linguagens, inicia servers)
+/code init -f     # Forca re-inicializacao
+/code status      # Status dos language servers
+/code logs        # Ver erros dos LSPs
+/code overview    # Visao geral do codebase
+/code summary     # Gerar documentacao automatica (AGENTS.md, README)`}</pre>
+      <p className="mt-3">Sem /code init, apenas tree-sitter funciona (18 linguagens). Com /code init, ativa LSP para: find references, go to definition, rename, diagnostics, hover.</p>
+
+      <h2>/tools — Gerenciar trust</h2>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`/tools              # Lista ferramentas disponiveis
+/tools trust-all    # Confia em todas (sem confirmacao)
+/tools trust grep   # Confia em ferramenta especifica
+/tools untrust grep # Remove trust
+/tools reset        # Reseta todas para pedir confirmacao`}</pre>
+
+      <h2>/usage — Billing</h2>
+      <p>Mostra consumo de creditos e limites da conta.</p>
+
+      <h2>Settings que mudam comportamento do chat</h2>
+      <div className="overflow-x-auto my-4">
+        <table className="w-full text-sm border border-border rounded-lg">
+          <thead className="bg-muted"><tr><th className="p-3 text-left">Setting</th><th className="p-3 text-left">O que faz</th><th className="p-3 text-left">Default</th></tr></thead>
+          <tbody>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">chat.enableThinking</td><td className="p-3">Ativa modo thinking (modelo "pensa" antes de responder, mais preciso mas mais lento)</td><td className="p-3">-</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">chat.enableKnowledge</td><td className="p-3">Ativa knowledge bases e busca semantica</td><td className="p-3">true</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">chat.enableCodeIntelligence</td><td className="p-3">Ativa code intelligence com LSP</td><td className="p-3">-</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">chat.enableSubagent</td><td className="p-3">Ativa sub-agentes em paralelo</td><td className="p-3">-</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">chat.enableTodoList</td><td className="p-3">Ativa criacao automatica de task lists</td><td className="p-3">-</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">chat.enableNotifications</td><td className="p-3">Notificacoes desktop quando tarefa longa termina</td><td className="p-3">-</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">chat.disableAutoCompaction</td><td className="p-3">Desativa compactacao automatica (contexto cheio = erro)</td><td className="p-3">false</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">chat.autoExpandToolOutput</td><td className="p-3">Sempre mostra output completo das ferramentas</td><td className="p-3">false</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">chat.greeting.enabled</td><td className="p-3">Mostra mensagem de boas-vindas ao iniciar</td><td className="p-3">true</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">chat.defaultModel</td><td className="p-3">Modelo padrao para novas sessoes</td><td className="p-3">auto</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">chat.defaultAgent</td><td className="p-3">Agente padrao para novas sessoes</td><td className="p-3">kiro_default</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`# Ativar thinking (mais preciso, consome mais creditos)
+kiro-cli settings chat.enableThinking true
+
+# Desativar compactacao auto
+kiro-cli settings chat.disableAutoCompaction true
+
+# Mudar modelo padrao
+kiro-cli settings chat.defaultModel claude-opus-4.6`}</pre>
+
+      <h2>Atalhos de teclado no chat</h2>
+      <div className="overflow-x-auto my-4">
+        <table className="w-full text-sm border border-border rounded-lg">
+          <thead className="bg-muted"><tr><th className="p-3 text-left">Tecla</th><th className="p-3 text-left">Acao</th></tr></thead>
+          <tbody>
+            <tr className="border-t border-border"><td className="p-3 font-mono">Ctrl+R</td><td className="p-3">Buscar no historico (case-insensitive)</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono">Ctrl+C</td><td className="p-3">Cancelar operacao ou sair</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono">Ctrl+G</td><td className="p-3">Ver sub-agentes em execucao</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono">Shift+Tab</td><td className="p-3">Toggle entre Plan agent e agente anterior</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono">Up/Down</td><td className="p-3">Navegar historico de mensagens</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

@@ -113,6 +113,165 @@ then asks approval before switching to execution.`}</pre>
       <h2>/rewind — Voltar no tempo</h2>
       <p>Rebobina a conversa para um turno anterior, criando fork (nova sessao a partir daquele ponto). A sessao original fica intacta.</p>
 
+
+      <h2>/usage — Billing e creditos</h2>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`/usage
+
+Estimated Usage | resets on 2026-07-01 | KIRO PRO+
+Credits (0.00 of 2000 covered in plan)
+████████████████████████████████████████ 0%
+
+Overages: Disabled
+
+To manage your plan: https://app.kiro.dev/account/usage
+Tip: to see context window usage, run /context`}</pre>
+
+      <h2>/context — Uso de tokens e arquivos</h2>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`/context
+# Mostra uso atual da janela de contexto (tokens usados/total)
+
+/context add ./src/auth.ts ./src/db.ts
+# Adiciona arquivos ao contexto da sessao
+
+/context add --force ./arquivo-grande.ts
+# Forca adicao mesmo se grande
+
+/context remove ./src/auth.ts
+# Remove do contexto
+
+/context clear
+# Limpa todo contexto adicionado`}</pre>
+
+      <h2>/model — Trocar modelo</h2>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`/model
+# Abre seletor interativo de modelos
+
+/model claude-opus-4.6
+# Troca direto para modelo especifico
+
+/model auto
+# Volta para selecao automatica`}</pre>
+
+      <h2>/knowledge — Knowledge base</h2>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`/knowledge show
+# Lista todas as KBs indexadas
+
+/knowledge add meu-projeto ./src
+# Indexa diretorio
+
+/knowledge add docs ./README.md
+# Indexa arquivo
+
+/knowledge remove meu-projeto
+# Remove KB
+
+/knowledge update ./src
+# Re-indexa conteudo atualizado
+
+/knowledge clear
+# Remove todas as KBs
+
+/knowledge cancel
+# Cancela indexacao em andamento`}</pre>
+
+      <h2>/agent — Trocar agente</h2>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`/agent
+# Lista agentes disponiveis
+
+/agent rust-dev
+# Troca para agente especifico
+
+/agent swap rust-dev
+# Alias para trocar
+
+/agent create meu-agente
+# Cria novo agente via IA
+
+/agent edit meu-agente
+# Edita config no $EDITOR`}</pre>
+
+      <h2>/compact — Compactar contexto</h2>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`/compact
+# Resume mensagens antigas em sumario
+# Libera espaco na janela de contexto
+# Mantem informacoes-chave e decisoes
+# Mensagens recentes ficam intactas`}</pre>
+
+      <h2>/hooks — Ver hooks ativos</h2>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`/hooks
+# Mostra hooks configurados no agente atual:
+# agentSpawn: git status
+# postToolUse (fs_write): npx eslint --fix
+# stop: echo done`}</pre>
+
+      <h2>/mcp — MCP servers</h2>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`/mcp
+# Lista servers e status
+
+/mcp list
+@git (mcp-server-git)
+  Status: Initialized
+  Tools: git_status, git_commit, git_log
+
+@github (mcp-server-github)
+  Status: Needs authentication
+  OAuth URL: https://github.com/login/oauth/...
+
+/mcp add
+# Menu interativo para adicionar server
+
+/mcp remove
+# Menu para remover server`}</pre>
+
+      <h2>/chat — Sessoes</h2>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`/chat
+# Lista sessoes anteriores para escolher
+
+/chat save backup.json
+# Exporta sessao para arquivo
+
+/chat save --force backup.json
+# Sobrescreve arquivo existente
+
+/chat load backup.json
+# Importa sessao de arquivo (.json ou .zip)
+
+/chat new
+# Nova conversa (sessao anterior preservada)
+
+/chat new "explique async em Rust"
+# Nova conversa com prompt inicial`}</pre>
+
+      <h2>/changelog — Release notes</h2>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`/changelog
+# Mostra notas de versao recentes do Kiro`}</pre>
+
+      <h2>/session-id</h2>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`/session-id
+f2946a26-3735-4b08-8d05-c928010302d5`}</pre>
+
+      <h2>/spawn — Sub-agente</h2>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`/spawn analise todos os endpoints sem tratamento de erro
+# Cria nova sessao de sub-agente com a tarefa
+# Roda em paralelo, visivel com Ctrl+G`}</pre>
+
+      <h2>/paste — Imagem</h2>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`/paste
+# Cola imagem do clipboard no chat
+# O modelo analisa a imagem visualmente`}</pre>
+
+      <h2>/guide — Ajuda sobre Kiro</h2>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`/guide como funciona o sistema de specs?
+# Muda para agente guia que responde sobre features do Kiro
+# Usa documentacao interna para respostas precisas`}</pre>
+
+      <h2>/prompts — Prompts salvos</h2>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`/prompts
+# Lista prompts disponiveis
+
+/prompts meu-prompt
+# Executa prompt salvo`}</pre>
+
       <h2>Settings que mudam comportamento do chat</h2>
       <div className="overflow-x-auto my-4">
         <table className="w-full text-sm border border-border rounded-lg">

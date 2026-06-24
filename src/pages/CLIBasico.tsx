@@ -104,7 +104,17 @@ kiro-cli agent list     # Listar agentes
 kiro-cli agent create   # Criar agente
 kiro-cli agent validate # Validar config de agente
 kiro-cli mcp            # Gerenciar MCP servers
-kiro-cli acp            # Iniciar Agent Client Protocol (integracao programatica)`}</pre>
+kiro-cli acp            # Agent Client Protocol (integracao programatica)
+kiro-cli translate      # Linguagem natural para comando shell
+kiro-cli inline enable  # Completions inline no shell
+kiro-cli inline status  # Status das completions
+kiro-cli doctor         # Diagnosticar e corrigir problemas
+kiro-cli init bash      # Gerar dotfiles para o shell
+kiro-cli integrations   # Gerenciar integracoes do sistema
+kiro-cli update         # Atualizar o Kiro
+kiro-cli theme          # Ver ou mudar tema
+kiro-cli dashboard      # Abrir dashboard web
+kiro-cli profile        # Perfil do usuario IDC`}</pre>
     </div>
   );
 }

@@ -11,7 +11,23 @@ npm install -g @anthropic-ai/kiro-cli
 # Verificar
 kiro-cli --version`}</pre>
 
-      <h2>Autenticacao: kiro-cli login</h2>
+      <h2>Metodo 0: API Key (variavel de ambiente)</h2>
+      <p>A forma mais simples. Gere uma API key no dashboard e exporte como variavel:</p>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`# Exportar a chave (prefixo ksk_)
+export KIRO_API_KEY="ksk_SuaChaveAqui"
+
+# Verificar
+kiro-cli whoami
+# Output: Authenticated with API key
+# Email: seu-email@exemplo.com
+
+# Para persistir, adicione ao ~/.bashrc ou ~/.zshrc:
+echo 'export KIRO_API_KEY="ksk_..."' >> ~/.bashrc`}</pre>
+      <div className="p-4 border-l-4 border-primary bg-primary/5 rounded-r-lg my-4">
+        <p className="text-sm"><strong>Ideal para:</strong> servidores, CI/CD, automacao, ambientes sem navegador. Nao requer login interativo.</p>
+      </div>
+
+      <h2>Autenticacao interativa: kiro-cli login</h2>
       <p>O Kiro suporta 4 metodos de autenticacao:</p>
 
       <h3>1. Builder ID (gratuito)</h3>

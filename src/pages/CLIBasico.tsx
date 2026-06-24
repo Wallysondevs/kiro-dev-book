@@ -1,122 +1,110 @@
 export default function CLIBasico() {
   return (
     <div className="max-w-4xl mx-auto">
-      <h1>CLI Básico</h1>
-      <p className="text-lg text-muted-foreground mb-6">Guia completo de todos os comandos, flags e comportamentos do Kiro CLI.</p>
+      <h1>CLI Referencia Completa</h1>
+      <p className="text-lg text-muted-foreground mb-6">Todas as opcoes, flags e modos de operacao do Kiro CLI documentados.</p>
 
-      <h2>Anatomia de um comando</h2>
-      <p>Todo comando do Kiro segue o padrão:</p>
-      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`kiro-cli <comando> [subcomando] [--flags] [argumentos]`}</pre>
+      <h2>kiro-cli chat — comando principal</h2>
+      <p>Inicia sessao interativa com o agente de IA.</p>
 
-      <h2>Comandos disponíveis</h2>
+      <h3>Opcoes completas</h3>
+      <div className="overflow-x-auto my-4">
+        <table className="w-full text-sm border border-border rounded-lg">
+          <thead className="bg-muted"><tr><th className="p-3 text-left">Flag</th><th className="p-3 text-left">Curta</th><th className="p-3 text-left">Descricao</th></tr></thead>
+          <tbody>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">--resume</td><td className="p-3">-r</td><td className="p-3">Retoma a conversa mais recente do diretorio atual (restaura modelo ativo)</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">--resume-id ID</td><td className="p-3"></td><td className="p-3">Retoma conversa especifica por session ID</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">--resume-picker</td><td className="p-3"></td><td className="p-3">Seletor interativo de sessoes para retomar</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">--agent NOME</td><td className="p-3"></td><td className="p-3">Agente a usar (local: .kiro/agents/, global: ~/.kiro/agents/)</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">--model ID</td><td className="p-3"></td><td className="p-3">Modelo especifico (sobrepoe modelo salvo na sessao)</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">--trust-all-tools</td><td className="p-3">-a</td><td className="p-3">Auto-aprova todas as ferramentas sem perguntar</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">--trust-tools LISTA</td><td className="p-3"></td><td className="p-3">Auto-aprova ferramentas especificas (separadas por virgula)</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">--no-interactive</td><td className="p-3"></td><td className="p-3">Modo headless (sem TUI, requer query como argumento)</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">--list-sessions</td><td className="p-3">-l</td><td className="p-3">Lista conversas salvas do diretorio atual</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">--delete-session ID</td><td className="p-3">-d</td><td className="p-3">Deleta conversa por ID</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">--wrap always|never|auto</td><td className="p-3">-w</td><td className="p-3">Controle de quebra de linha</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">--verbose</td><td className="p-3">-v</td><td className="p-3">Aumenta verbosidade do log (repetivel)</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">[INPUT]</td><td className="p-3"></td><td className="p-3">Query inicial para enviar ao iniciar</td></tr>
+          </tbody>
+        </table>
+      </div>
 
-      <h3>kiro-cli chat</h3>
-      <p>O comando principal. Inicia uma sessão interativa de chat com o agente.</p>
-      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`# Uso básico — inicia no diretório atual
-kiro-cli chat
+      <h2>Modo Headless (automacao)</h2>
+      <p>Para scripts e CI/CD, use <code className="bg-muted px-1.5 py-0.5 rounded font-mono text-sm">--no-interactive</code>:</p>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`# Executa query unica e sai
+kiro-cli chat --no-interactive --trust-all-tools "Rode os testes e resuma resultados"
 
-# Com modelo específico
-kiro-cli chat --model claude-sonnet-4
+# Confia apenas em ferramentas de leitura
+kiro-cli chat --no-interactive --trust-tools=fs_read,grep "Liste todos os TODOs"`}</pre>
+      <div className="p-4 border-l-4 border-primary bg-primary/5 rounded-r-lg my-4">
+        <p className="text-sm"><strong>Importante em headless:</strong> Sem --trust-all-tools ou --trust-tools, o agente trava esperando aprovacao que nunca vem. Comandos slash interativos (/model picker, /agent picker) nao funcionam.</p>
+      </div>
 
-# Retomar última sessão
+      <h2>Gerenciamento de sessoes</h2>
+      <p>Sessoes sao salvas automaticamente a cada turno e sao por-diretorio:</p>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`# Listar sessoes do projeto atual
+kiro-cli chat --list-sessions
+
+# Output:
+# Chat sessions for /path/to/project:
+# SessionId: f2946a26-... 2 hours ago | Auth implementation | 15 msgs
+# SessionId: 7bd2c90f-... 1 day ago  | DB refactor | 23 msgs
+
+# Retomar a mais recente
 kiro-cli chat --resume
 
-# Em outro diretório
-kiro-cli chat --cwd /caminho/do/projeto`}</pre>
-      <p className="mt-3">Quando o chat inicia, o Kiro:</p>
-      <ol className="list-decimal list-inside space-y-1 my-3 ml-4 text-sm">
-        <li>Detecta o projeto (linguagem, build tool, testes)</li>
-        <li>Carrega arquivos .kiro/ (steering, specs, hooks)</li>
-        <li>Mostra o prompt para você digitar</li>
-      </ol>
+# Retomar especifica
+kiro-cli chat --resume-id f2946a26-3735-4b08-8d05-c928010302d5
 
-      <h3>kiro-cli auth</h3>
-      <p>Gerencia autenticação. O Kiro suporta múltiplas formas de auth:</p>
-      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`# Login interativo (abre navegador para OAuth)
-kiro-cli auth
+# Seletor interativo
+kiro-cli chat --resume-picker
 
-# Logout
-kiro-cli auth logout
+# Deletar sessao
+kiro-cli chat --delete-session f2946a26-3735-4b08-8d05-c928010302d5`}</pre>
 
-# Verificar status
-kiro-cli whoami`}</pre>
-      <p className="mt-3">Métodos de autenticação (em ordem de prioridade):</p>
-      <ol className="list-decimal list-inside space-y-1 my-3 ml-4 text-sm">
-        <li><code className="bg-muted px-1 rounded">ANTHROPIC_API_KEY</code> — variável de ambiente (mais simples)</li>
-        <li>OAuth via <code className="bg-muted px-1 rounded">kiro-cli auth</code> — login com conta Anthropic</li>
-        <li>AWS Bedrock — via <code className="bg-muted px-1 rounded">AWS_PROFILE</code> configurado</li>
-      </ol>
+      <h2>Armazenamento de sessoes</h2>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`~/.kiro/sessions/cli/
+├── {session-id}.json    # Metadata (cwd, timestamps, estado)
+├── {session-id}.jsonl   # Log da conversa (append-only)
+└── {session-id}.lock    # Lock (existe so quando sessao ativa)`}</pre>
 
-      <h2>Interface TUI (Terminal UI)</h2>
-      <p>O chat usa uma interface rica no terminal. Aqui estão todos os atalhos:</p>
+      <h2>Atalhos do teclado</h2>
       <div className="overflow-x-auto my-4">
         <table className="w-full text-sm border border-border rounded-lg">
-          <thead className="bg-muted"><tr><th className="p-3 text-left">Tecla</th><th className="p-3 text-left">Ação</th><th className="p-3 text-left">Quando usar</th></tr></thead>
+          <thead className="bg-muted"><tr><th className="p-3 text-left">Tecla</th><th className="p-3 text-left">Acao</th></tr></thead>
           <tbody>
-            <tr className="border-t border-border"><td className="p-3 font-mono">Enter</td><td className="p-3">Enviar mensagem</td><td className="p-3">Quando terminar de escrever</td></tr>
-            <tr className="border-t border-border"><td className="p-3 font-mono">Shift+Enter</td><td className="p-3">Nova linha</td><td className="p-3">Mensagens multi-linha</td></tr>
-            <tr className="border-t border-border"><td className="p-3 font-mono">Ctrl+C</td><td className="p-3">Cancelar operação</td><td className="p-3">Parar uma ação longa do agente</td></tr>
-            <tr className="border-t border-border"><td className="p-3 font-mono">Ctrl+O</td><td className="p-3">Toggle output completo</td><td className="p-3">Ver output de comandos expandido</td></tr>
-            <tr className="border-t border-border"><td className="p-3 font-mono">Ctrl+G</td><td className="p-3">Ver sub-agentes</td><td className="p-3">Monitorar pipelines paralelos</td></tr>
-            <tr className="border-t border-border"><td className="p-3 font-mono">↑ / ↓</td><td className="p-3">Histórico de mensagens</td><td className="p-3">Reutilizar mensagens anteriores</td></tr>
-            <tr className="border-t border-border"><td className="p-3 font-mono">/</td><td className="p-3">Iniciar comando slash</td><td className="p-3">Acessar funcionalidades do sistema</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono">Ctrl+R</td><td className="p-3">Buscar no historico de comandos (case-insensitive)</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono">Ctrl+C</td><td className="p-3">Cancelar operacao atual ou sair</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono">Ctrl+G</td><td className="p-3">Ver sub-agentes em execucao</td></tr>
+            <tr className="border-t border-border"><td className="p-3 font-mono">Up/Down</td><td className="p-3">Navegar historico de mensagens</td></tr>
           </tbody>
         </table>
       </div>
 
-      <h2>Comandos Slash — referência completa</h2>
-      <p>Comandos slash são digitados dentro do chat e controlam o comportamento do Kiro:</p>
+      <h2>Logs</h2>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`# Localizacao dos logs:
+# Linux: /tmp/kiro-log/logs/kiro-chat.log
+# macOS: $TMPDIR/kiro-log/kiro-chat.log
 
-      <h3>Gerenciamento de sessão</h3>
-      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`/chat save minha-feature    — Salva sessão com nome
-/chat load minha-feature    — Carrega sessão salva
-/chat list                  — Lista todas as sessões
-/clear                      — Limpa histórico (começa do zero)
-/compact                    — Compacta contexto manualmente`}</pre>
+# Log customizado:
+KIRO_CHAT_LOG_FILE=/tmp/debug.log kiro-cli chat
 
-      <h3>Contexto e conhecimento</h3>
-      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`/context add ./arquivo.ts   — Adiciona arquivo ao contexto
-/context show               — Mostra contexto ativo
-/context remove [id]        — Remove item do contexto
-/knowledge add              — Indexa conteúdo para busca
-/knowledge search "query"   — Busca semântica no KB`}</pre>
+# Debug verboso:
+KIRO_LOG_LEVEL=debug kiro-cli chat
 
-      <h3>Configuração</h3>
-      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`/model claude-opus-4        — Troca o modelo ativo
-/copy                       — Copia última resposta
-/help                       — Lista todos os comandos`}</pre>
+# Sem cores no log:
+KIRO_LOG_NO_COLOR=1 kiro-cli chat`}</pre>
 
-      <h2>Variáveis de ambiente</h2>
-      <div className="overflow-x-auto my-4">
-        <table className="w-full text-sm border border-border rounded-lg">
-          <thead className="bg-muted"><tr><th className="p-3 text-left">Variável</th><th className="p-3 text-left">Descrição</th><th className="p-3 text-left">Exemplo</th></tr></thead>
-          <tbody>
-            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">ANTHROPIC_API_KEY</td><td className="p-3">Chave da API Anthropic</td><td className="p-3 font-mono text-xs">sk-ant-api03-...</td></tr>
-            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">KIRO_MODEL</td><td className="p-3">Modelo padrão</td><td className="p-3 font-mono text-xs">claude-opus-4</td></tr>
-            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">AWS_PROFILE</td><td className="p-3">Perfil AWS (para Bedrock)</td><td className="p-3 font-mono text-xs">production</td></tr>
-            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">AWS_REGION</td><td className="p-3">Região AWS</td><td className="p-3 font-mono text-xs">us-east-1</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h2>Estrutura de diretório .kiro/</h2>
-      <p>O Kiro usa uma pasta <code className="bg-muted px-1.5 py-0.5 rounded font-mono text-sm">.kiro/</code> na raiz do projeto para configurações persistentes:</p>
-      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`seu-projeto/
-├── .kiro/
-│   ├── steering.md         # Regras de comportamento do agente
-│   ├── specs/              # Documentos de planejamento
-│   │   ├── auth-jwt.md     #   Cada feature tem uma spec
-│   │   └── refactor-db.md
-│   ├── hooks/              # Scripts automáticos
-│   │   ├── post-file-write.sh
-│   │   └── on-error.sh
-│   └── context/            # Contexto persistente entre sessões
-├── src/
-├── package.json
-└── ...`}</pre>
-      <div className="p-4 border-l-4 border-primary bg-primary/5 rounded-r-lg my-4">
-        <p className="text-sm"><strong>Dica:</strong> Commite a pasta .kiro/ no git. Assim toda a equipe compartilha as mesmas regras de steering e specs do projeto.</p>
-      </div>
+      <h2>Outros comandos</h2>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`kiro-cli login          # Autenticacao
+kiro-cli logout         # Encerrar sessao
+kiro-cli whoami         # Ver usuario logado
+kiro-cli settings       # Configuracoes
+kiro-cli agent list     # Listar agentes
+kiro-cli agent create   # Criar agente
+kiro-cli agent validate # Validar config de agente
+kiro-cli mcp            # Gerenciar MCP servers
+kiro-cli acp            # Iniciar Agent Client Protocol (integracao programatica)`}</pre>
     </div>
   );
 }

@@ -1,56 +1,135 @@
 export default function Configuracao() {
   return (
     <div className="max-w-4xl mx-auto">
-      <h1>Configuracao</h1>
-      <p className="text-lg text-muted-foreground mb-6">Todas as formas de configurar o Kiro — do ambiente global ate configuracoes por projeto.</p>
+      <h1>Configuracao de Agentes</h1>
+      <p className="text-lg text-muted-foreground mb-6">Agentes sao configurados via arquivos JSON que definem ferramentas, permissoes, resources, hooks e MCP servers.</p>
 
-      <h2>Hierarquia de configuracao</h2>
-      <p>O Kiro resolve configuracoes nesta ordem (posterior sobrepoe anterior):</p>
-      <ol className="list-decimal list-inside space-y-2 my-4 ml-4">
-        <li><strong>Defaults internos</strong> — modelo Sonnet, tema auto, regiao us-east-1</li>
-        <li><strong>Variaveis de ambiente</strong> — KIRO_MODEL, AWS_REGION, etc</li>
-        <li><strong>.kiro/steering.md do projeto</strong> — regras especificas do projeto</li>
-        <li><strong>Flags da CLI</strong> — --model, --cwd (maior prioridade)</li>
-      </ol>
+      <h2>Localizacao dos arquivos</h2>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`# Local (por workspace) — tem prioridade
+.kiro/agents/meu-agente.json
 
-      <h2>Variaveis de ambiente completas</h2>
-      <div className="overflow-x-auto my-4">
-        <table className="w-full text-sm border border-border rounded-lg">
-          <thead className="bg-muted"><tr><th className="p-3 text-left">Variavel</th><th className="p-3 text-left">Descricao</th><th className="p-3 text-left">Default</th></tr></thead>
-          <tbody>
-            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">ANTHROPIC_API_KEY</td><td className="p-3">API key da Anthropic</td><td className="p-3">-</td></tr>
-            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">KIRO_MODEL</td><td className="p-3">Modelo padrao</td><td className="p-3">claude-sonnet-4</td></tr>
-            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">AWS_PROFILE</td><td className="p-3">Perfil AWS</td><td className="p-3">default</td></tr>
-            <tr className="border-t border-border"><td className="p-3 font-mono text-primary">AWS_REGION</td><td className="p-3">Regiao AWS</td><td className="p-3">us-east-1</td></tr>
-          </tbody>
-        </table>
-      </div>
+# Global (usuario)
+~/.kiro/agents/meu-agente.json
 
-      <h2>Estrutura completa .kiro/</h2>
-      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`projeto/
-└── .kiro/
-    ├── steering.md          # Regras de comportamento
-    │                        # (estilo, testes, git, arquitetura)
-    │
-    ├── specs/               # Documentos de planejamento
-    │   ├── auth-jwt.md      #   requisitos + design + tasks
-    │   └── cache-system.md
-    │
-    ├── hooks/               # Scripts automaticos
-    │   ├── post-file-write.sh  # Roda apos cada arquivo escrito
-    │   ├── pre-shell.sh        # Valida antes de executar comando
-    │   └── on-error.sh         # Reage a erros
-    │
-    └── context/             # Notas persistentes
-        └── decisions.md     # Decisoes de arquitetura`}</pre>
+# O nome do arquivo (sem .json) vira o nome do agente`}</pre>
 
-      <h2>Boas praticas</h2>
-      <ul className="list-disc list-inside space-y-2 my-4 ml-4">
-        <li>Commite .kiro/ no git (exceto context/ se tiver dados sensiveis)</li>
-        <li>Mantenha steering.md atualizado com as praticas da equipe</li>
-        <li>Use specs para qualquer feature que leve mais de 1 hora</li>
-        <li>Hooks devem ser rapidos (idealmente abaixo de 5 segundos)</li>
-      </ul>
+      <h2>Estrutura completa do JSON</h2>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`{
+  "name": "rust-dev",
+  "description": "Agente de desenvolvimento Rust",
+  "prompt": "Voce e um expert em Rust. Foco em safety e performance.",
+  "model": "model-id",
+  "tools": ["fs_read", "fs_write", "execute_bash", "grep", "code"],
+  "allowedTools": ["fs_read", "grep", "glob"],
+  "toolsSettings": {
+    "fs_write": {
+      "allowedPaths": ["src/**", "tests/**"],
+      "deniedPaths": ["target/**"]
+    },
+    "execute_bash": {
+      "allowedCommands": ["cargo check", "cargo test"],
+      "autoAllowReadonly": true
+    }
+  },
+  "resources": [
+    "file://src/**/*.rs",
+    "file://Cargo.toml",
+    "skill://.kiro/skills/**/SKILL.md"
+  ],
+  "hooks": {
+    "agentSpawn": [{ "command": "cargo --version" }],
+    "stop": [{ "command": "echo done" }]
+  },
+  "mcpServers": {
+    "git": {
+      "command": "mcp-server-git",
+      "args": ["--stdio"]
+    }
+  },
+  "keyboardShortcut": "ctrl+shift+r",
+  "welcomeMessage": "Pronto para ajudar com Rust!"
+}`}</pre>
+
+      <h2>Campos em detalhe</h2>
+
+      <h3>tools — ferramentas disponiveis</h3>
+      <p>Lista de ferramentas que o agente pode usar:</p>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`"tools": ["fs_read", "fs_write", "execute_bash", "grep", "glob", "code", "use_aws"]`}</pre>
+
+      <h3>allowedTools — auto-aprovadas</h3>
+      <p>Ferramentas usadas sem pedir confirmacao. Suporta wildcards:</p>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`"allowedTools": [
+  "fs_read",              // Exato
+  "fs_*",                 // Wildcard: fs_read, fs_write, fs_list
+  "@git/git_status",      // Tool especifica de MCP server
+  "@github/*",            // Todas tools do server github
+  "@builtin"              // Todas tools built-in
+]`}</pre>
+
+      <h3>resources — contexto automatico</h3>
+      <p>Arquivos carregados no contexto do agente. Dois tipos:</p>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`"resources": [
+  "file://README.md",           // Sempre carregado no contexto
+  "file://src/**/*.rs",          // Glob - todos os .rs
+  "skill://.kiro/skills/**/SKILL.md"  // Sob demanda (lazy loading)
+]`}</pre>
+      <p className="mt-3"><strong>Skills</strong> sao resources com loading progressivo. O metadata (nome, descricao) e carregado no inicio, o conteudo completo so quando o agente precisa. Requer frontmatter YAML no arquivo.</p>
+
+      <h3>mcpServers — integracoes externas</h3>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`"mcpServers": {
+  // Servidor local (stdio)
+  "git": {
+    "command": "mcp-server-git",
+    "args": ["--stdio"],
+    "env": { "GIT_DIR": "/path" },
+    "timeout": 120000,
+    "disabledTools": ["dangerous_tool"]
+  },
+  // Servidor remoto (HTTP)
+  "api": {
+    "url": "https://mcp.example.com/sse",
+    "headers": { "Authorization": "Bearer \" },
+    "oauthScopes": ["mcp", "profile"]
+  }
+}`}</pre>
+
+      <h3>keyboardShortcut — atalho para trocar de agente</h3>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`"keyboardShortcut": "ctrl+shift+r"
+// Modifiers: ctrl, shift, alt
+// Keys: a-z, 0-9, f1-f12, tab
+// Toggle: apertar de novo volta ao agente anterior`}</pre>
+
+      <h2>Criando agentes</h2>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`# Via IA (interativo)
+/agent create
+
+# Via CLI
+kiro-cli agent create --name meu-agente
+
+# Manual: criar .kiro/agents/meu-agente.json
+
+# Validar configuracao
+kiro-cli agent validate --path .kiro/agents/meu-agente.json
+
+# Listar agentes disponiveis
+kiro-cli agent list
+
+# Trocar agente no chat
+/agent meu-agente`}</pre>
+
+      <h2>Settings globais</h2>
+      <pre className="bg-muted p-4 rounded-md font-mono text-sm my-4 overflow-x-auto">{`# Gerenciar configuracoes
+kiro-cli settings
+
+# Knowledge base
+kiro-cli settings chat.enableKnowledge true
+kiro-cli settings knowledge.indexType Fast
+kiro-cli settings knowledge.maxFiles 10000
+kiro-cli settings knowledge.chunkSize 512
+
+# Default patterns para knowledge
+kiro-cli settings knowledge.defaultIncludePatterns '["**/*.rs", "**/*.md"]'
+kiro-cli settings knowledge.defaultExcludePatterns '["target/**", "node_modules/**"]'`}</pre>
     </div>
   );
 }
